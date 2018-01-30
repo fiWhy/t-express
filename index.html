@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="/scripts/lodash/lodash.js"></script>
+    <script src="/scripts/jquery/dist/jquery.js"></script>
+    <script src="/static/search.js"></script>
+    <script>
+        var s = new Search("http://localhost:3000/search");
+    </script>
+</head>
+
+<body>
+    <input type="text" id="searchInput" placeholder="Search...">
+    <ul id="variants"></ul>
+    <script>
+        var askAndDraw = _.debounce(function (e) {
+            var elementsBlock = variants;
+            elementsBlock.innerHTML = "";
+            if (this.value) {
+                s.ask(this.value)
+                    .then(function (result) {
+                        console.log(result);
+                        result.forEach(function (el) {
+                            var li = document.createElement("li");
+                            li.innerHTML = el.key;
+                            elementsBlock.appendChild(li);
+                        })
+                    })
+            }
+        }, 200);
+        searchInput.addEventListener("keyup", askAndDraw);
+    </script>
+</body>
+
+</html>
